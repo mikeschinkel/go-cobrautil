@@ -31,6 +31,7 @@ func NewCLI() *CLI {
 	return &CLI{}
 }
 
+//goland:noinspection GoUnusedParameter
 func (cli *CLI) Execute(ctx Context, args []string) (result CmdResult, err error) {
 	rootCmd.SetArgs(args)
 	err = rootCmd.Command().Execute()

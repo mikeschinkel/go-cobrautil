@@ -15,6 +15,7 @@ type TestCommon struct {
 	T      *testing.T
 }
 
+//goland:noinspection GoUnusedExportedFunction
 func NewTestCommon(c4t ContextForTests) *TestCommon {
 	return &TestCommon{
 		T:      c4t.TestingT(),

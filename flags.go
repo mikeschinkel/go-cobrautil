@@ -62,6 +62,7 @@ func (f *Flags) applyFlagOpts(name string, chkRequired bool, opts FlagOpts) {
 	}
 }
 
+//goland:noinspection GoUnusedExportedFunction
 func GetFlags(cmd Cmd) *Flags {
 	var cobraFlags = cmd.Flags()
 	return &Flags{

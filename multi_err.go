@@ -8,6 +8,7 @@ type MultiErr struct {
 	errs []error
 }
 
+//goland:noinspection GoUnusedExportedFunction
 func NewMultiErr() *MultiErr {
 	return &MultiErr{
 		errs: make([]error, 0),

@@ -15,7 +15,7 @@ func SetDebugOutput(output bool) {
 	debugOutput = output
 }
 
-//goland:noinspection GoExportedFuncWithUnexportedType
+//goland:noinspection GoUnusedExportedFunction,GoExportedFuncWithUnexportedType
 func Depth(depth int) debugObj {
 	var bullet string
 	if depth > 0 {
@@ -58,6 +58,8 @@ func Warn(format string, args ...any) {
 func Infof(format string, args ...any) {
 	fmt.Printf("+++ INFO: "+format+"\n", args...)
 }
+
+//goland:noinspection GoUnusedExportedFunction
 func Info(format string, args ...any) {
 	fmt.Println(append([]any{"+++ INFO: " + format}, args...)...)
 }

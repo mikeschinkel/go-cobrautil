@@ -55,6 +55,7 @@ func (c *config) AppName() string {
 	return c.appName
 }
 
+//goland:noinspection GoUnusedExportedFunction
 func ConfigLogArgs(c config) []any {
 	return []any{
 		ConfigFilepath, c.Filepath(),
@@ -121,6 +122,7 @@ func SaveConfig(ctx Context, cfg Config, file string) error {
 
 type OnErrFunc func(string, error)
 
+//goland:noinspection GoUnusedExportedFunction
 func SaveConfigWithOnErr(ctx Context, cfg Config, onErr OnErrFunc) (err error) {
 	fp := cfg.Filepath()
 	err = SaveConfig(ctx, cfg, fp)

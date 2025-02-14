@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//goland:noinspection GoUnusedExportedFunction
 func ValidateAndAssignArgs(numArgs int, assignFunc func([]string) error) cobra.PositionalArgs {
 	return func(cmd *cobra.Command, args []string) (err error) {
 		err = cobra.ExactArgs(numArgs)(cmd, args)
