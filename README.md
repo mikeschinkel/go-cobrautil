@@ -68,9 +68,29 @@ To use CobraUtil in a CLI app project:
 7. Create a `./yourpkg/flags.go` file and add the following:
   ```
   package yourpkg
+  
   var GlobalFlags struct {
     Quiet  *bool
     Output *string
+  }
+  ```
+
+7. Create a `./yourpkg/output_format.go` file and add the following:
+  ```
+  package yourpkg
+  
+  type OutputFormat string
+  
+  const (
+    Your1stFormat  OutputFormat = "1st"  // might be txt, yaml, json, etc.
+    Your2ndFormat  OutputFormat = "2nd"  // might be html, pdf, etc.
+    ...
+  )
+   
+  var AllFormats = []OutputFormat{
+    Your1stFormat,
+    Your2ndFormat,
+    ...
   }
   ```
 
