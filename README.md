@@ -44,7 +44,7 @@ To use CobraUtil in a CLI app project:
       ./../..
    )
    ```   
-6. Create a `./cmd/yourcli/main.go` file relative to the root of your project repo and add the following code:
+6. Create a `./cmd/yourcli/main.go` file and add the following code:
 
    ```go
    package main
@@ -64,17 +64,78 @@ To use CobraUtil in a CLI app project:
    }
    
    ```
+
+7. Create a `./yourpkg/flags.go` file and add the following:
+  ```
+  package yourpkg
+  var GlobalFlags struct {
+    Quiet  *bool
+    Output *string
+  }
+  ```
+
+1. Create a `./cmd/yourcli/cmd_root.go` file and add the following code:
+
+   ```go
+   package cmds
    
-7. Create a `./yourpkg` directory off the root of your repo. This directory is for the package you will develop that implements your CLI's functionality and that your commands will call, commands that will be stored in `./cmd/yourcli/cmds`:
+   import (
+     "github.com/mikeschinkel/go-cobrautil"
+     "github.com/spf13/cobra"
+   )
+   
+   // RootCmd represents the base command when called without any subcommands
+   var RootCmd = NewCmdFromOpts(CmdOpts{
+   Command: &cobra.Command{
+     Use:   "prefsctl",
+     Short: "CLI for managing macOS preferences",
+     Long:  "CLI for managing macOS preferences, especially for use with Ansible",
+     PersistentPreRun: func(cmd *cobra.Command, args []string) {
+       cobrautil.SetCalledCmd(cmd)
+       if *macprefs.GlobalFlags.Quiet {
+         cobrautil.SetQuiet(cmd)
+       }
+     },
+     // Silence usage as we present usage after calling Cobra
+     SilenceUsage: true,
+     // Silence errors as we handle errors after calling Cobra
+     SilenceErrors: true,
+     },
+   })
+   
+   func init() {
+     cobrautil.AddInitializer(func(cli *CLI) {
+     
+       yourpkg.GlobalFlags.YourGlobalFlag = PersistentBoolFlag(RootCmd, CmdFlagArgs{
+         Name:      cobrautil.QuietFlagName,
+         Shorthand: cobrautil.QuietFlagShorthand,
+         Default:   false,
+         Usage:     "Disable informational messages to stdOut",
+       })
+     
+       yourpkg.GlobalFlags.Output = PersistentStringFlag(RootCmd, CmdFlagArgs{
+         Name:      cobrautil.OutputFlagName,
+         Shorthand: cobrautil.OutputFlagShorthand,
+         Default:   "",
+         Usage: fmt.Sprintf("Specify the format for output; one of: %s",
+           strings.Join(sliceconv.ToStrings(yourpkg.AllFormats), ","),
+         ),
+       })
+     })
+   }
+
+   ```
+   
+9. Create a `./yourpkg` directory off the root of your repo. This directory is for the package you will develop that implements your CLI's functionality and that your commands will call, commands that will be stored in `./cmd/yourcli/cmds`:
 
 ### Usage for each command
 Then for each command:
 
-2. Create a file in `./yourpkg` named whatever you prefer to store `YourCmdImplementation()` with the following signature:
+10. Create a file in `./yourpkg` named whatever you prefer to store `YourCmdAction()` with the following signature:
    ```
-   YourCmdImplementation(ctx Context, cfg cobrautil.Config, cmd Cmd) cobrautil.CmdResult
+   YourCmdAction(ctx Context, cfg cobrautil.Config, cmd Cmd) cobrautil.CmdResult
    ```
-2. Create a file in `./cmd/yourcli/cmds` named in the form of `cmd_yourcmd.go` and add the following code, changing `yourcmd` and `yourCmd` and `yourpkg` to names applicable to your command and the package which provides your command's functionality:   
+11. Create a file in `./cmd/yourcli/cmds` named in the form of `cmd_yourcmd.go` and add the following code, changing `yourcmd` and `yourCmd` and `yourpkg` to names applicable to your command and the package which provides your command's functionality:   
    ```go
    package cmds
    
@@ -123,7 +184,7 @@ Then for each command:
    })
    
    func runYourCmdFunc(ctx Context, cfg cobrautil.Config, cmd Cmd) cobrautil.CmdResult {
-     return yourpkg.YourCmdImplementation(ctx, cfg, cmd, yourpkg.YourCmdArgs{
+     return yourpkg.YourCmdAction(ctx, cfg, cmd, yourpkg.YourCmdArgs{
        YourProp: yourpkg.YourProp(*cmd.Props().(*YourCmdProps).yourProp),
      }).CobraUtilResult(cmd)
    }
