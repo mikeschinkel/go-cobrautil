@@ -8,11 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mikeschinkel/go-cobrautil/test/testutil"
-)
-
-const (
-	OnErrExitCode = 999
+	"github.com/mikeschinkel/go-cobrautil/testutil"
 )
 
 var testMain *TestMain
@@ -24,10 +20,12 @@ type TestMain struct {
 	RootCmd         Cmd
 }
 
+//goland:noinspection GoUnusedExportedFunction
 func NewTestMain() *TestMain {
 	return &TestMain{}
 }
 
+//goland:noinspection GoUnusedExportedFunction
 func GetCurrentContextForTests() testutil.ContextForTests {
 	return testMain.contextForTests
 }
