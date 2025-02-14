@@ -1,13 +1,11 @@
 package cobrautil
 
 import (
-	"bufio"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/fs"
 	"os"
-	"strings"
 	"syscall"
 
 	"golang.org/x/text/cases"
@@ -53,6 +51,8 @@ func marshalJSONFile(_ Context, file string, object any) error {
 end:
 	return err
 }
+
+var DefaultLanguage = language.English
 
 var defaultLanguage language.Tag
 var titler cases.Caser
